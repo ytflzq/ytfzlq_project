@@ -1,0 +1,196 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>网站后台管理</title>
+<script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+        $(".right").css("width",($(document).width()-200)+"px");
+        $(".right").css("height",($(document).height()-30)+"px");
+        $(".nav_title").click(function(){ 
+            $(this).next("div").slideToggle("slow")  
+            .siblings(".nav_list:visible").slideUp("slow");
+        });
+        $(".left li").click(function(){ 
+            $("iframe").attr("src",$(this).attr("url"));
+        });
+    });
+</script>
+<style>
+body{ 
+    margin:0;
+    font-family:微软雅黑;
+}
+.top{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    background-color: #dfdfdf;
+}
+.buttom{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    background-color: #adadad;
+    text-align: center;
+    font-size: 12px;
+    color: red;
+    line-height: 30px;
+}
+.left {
+    width: 200px;
+    border-right: 1px solid #CCCCCC;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    color: #000000;
+    font-size: 14px;
+    text-align: center;
+}
+.right{
+    background-color: #ffd;
+    position: absolute;
+    top: 30px;
+    left: 200px;
+    color: #000000;
+    font-size: 14px;
+    text-align: center;
+}
+.right iframe{
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+.nav {
+    text-align: center;
+    width: 200px;
+    padding-top: 0px;
+}
+
+.nav_title {
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    font-size: 13px;
+    position: relative;
+    border-bottom: #ccc 1px dotted;
+}
+
+.nav_img {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 40px;
+    top: 10px;
+}
+
+.jbsz {
+    background: url(/static/img/1.png);
+}
+
+.xwzx {
+    background: url(/static/img/2.png);
+}
+
+.zxcp {
+    background: url(/static/img/4.png);
+}
+
+.lmtj {
+    background: url(/static/img/8.png);
+}
+
+.nav_list {
+    display: none;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.nav_list ul {  
+    margin: 0;
+    padding: 0;
+}
+
+.nav_list li {
+    height: 30px;
+    line-height: 30px;
+    list-style: none;
+    border-bottom: #ccc 1px dotted;
+    text-align: center;
+}
+.tools{
+    float: right;
+}
+</style>
+</head>
+<body>
+<div class="top">
+    <div class="tools">
+        <img src="/static/img/user.png">
+        <span>兄弟社区欢迎您，{{name}} </span>
+        <button class="btn btn-link radius" onclick="loginout();" type="button">退出</button>
+    </div>
+</div>
+<div class="center">
+    <div class="left"> 
+      <div class="nav"> 
+        <div class="nav_title">
+          <div class="nav_img jbsz"></div>基本管理
+        </div>  
+        <div class="nav_list"> 
+          <ul> 
+            <li url="/usermanage/index">用户管理</li>  
+            <li url="/log/index">日志管理</li>  
+            <li url="/log/index2">日志管理2</li>
+            <li url="/task/index">我的任务</li> 
+          </ul> 
+        </div>  
+        <div class="nav_title">
+          <div class="nav_img xwzx"></div>统计
+        </div>  
+        <div class="nav_list"> 
+          <ul> 
+            <li>登录日志统计</li>  
+            <li>任务完成排名</li>  
+          </ul> 
+        </div>  
+        <!-- <div class="nav_title">
+          <div class="nav_img zxcp"></div>最新产品
+        </div>  
+        <div class="nav_list"> 
+          <ul> 
+            <li>图片管理</li>  
+            <li>图片分类</li>  
+            <li>添加图片</li> 
+          </ul> 
+        </div>  
+        <div class="nav_title">
+          <div class="nav_img lmtj"></div> 栏目添加
+        </div>  
+        <div class="nav_list"> 
+          <ul> 
+            <li>文章系统</li>  
+            <li>图片系统</li>  
+            <li>添加表单</li>  
+            <li>招聘系统</li> 
+          </ul> 
+        </div>  -->
+      </div> 
+    </div>
+    <div class="right">
+        <iframe src=""></iframe>
+    </div>
+</div>
+<div class="buttom">
+注：该社区完全是袁庭飞那个笨蛋搞着玩的，会一点一点完善，希望关注！
+</div>
+<script type="text/javascript">
+    //退出
+function loginout() {
+    window.location.href = "/app/exit";
+}
+</script>
+</body>
+</html>

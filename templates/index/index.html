@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type' />
+    <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/static/h-ui/css/H-ui.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/lib/Hui-iconfont/1.0.7/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/static/h-ui/css/style.css" />
+    <title>主页</title>
+    <style type="text/css">
+    body{
+        margin: 0;
+        padding: 0;
+    }
+    
+    a{
+        cursor: pointer;
+    }    
+    .topdiv{
+        background-color: #DEDEDE;
+        width: 100%;
+        height: 30px;
+        font-size: 15px;
+    }
+    .butdiv{
+        /*position: fixed;*/
+        bottom: 0;
+        text-align: center;
+        color: red;
+        font-size: 12px;
+        
+    }
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    </style>
+</head>
+<body>
+<div class="topdiv">
+    
+    兄弟社区欢迎您，{{name}}
+    <button class="btn btn-link radius" onclick="loginout();" type="button">退出</button>
+    <button class="btn btn-link radius" onclick="statistics();" type="button">统计</button>
+    <button class="btn btn-link radius" onclick="game(1);" type="button">小游戏-贪吃蛇</button>
+    <button class="btn btn-link radius" onclick="game(2);" type="button">小游戏-五子棋</button>
+    <button class="btn btn-link radius" onclick="option();" type="button">主页2</button>
+    <button class="btn btn-link radius" onclick="new_index();" type="button">new_index</button>
+    <!-- <button class="btn btn-link radius" onclick="jsontest();" type="button">jsontest</button> -->
+    检索：<select id="selectTitle" onchange="selectChange();">
+        <option value="">全部相关</option>    
+        <option value="IT">IT</option>    
+        <option value="read">读书</option>    
+        <option value="game">游戏</option>
+        <option value="other">其他</option>        
+    </select>
+    <select id="username" onchange="selectChange();">
+    <option value="">全部作者</option>
+    {% for item in users %}
+        <option value="{{item.id}}">{{item.name}}</option>    
+    {% endfor %}
+    </select>
+    <div style="margin-bottom: 10px;">
+        <span class="text_comment" id="text_comment_refresh"></span>
+    </div>
+</div>
+<table class="table">
+  <caption>留言内容</caption>
+  <thead>
+    <tr>
+      <th width="8%">相关</th>
+      <th width="8%">作者</th>
+      <th width="15%">时间</th>
+      <th>内容</th>
+      {% if isOperation %}
+      <th width="8%">操作</th>
+      {% endif%}
+    </tr>
+  </thead>
+  <tbody id="tbody">
+{% for item in row %}
+    <tr>
+      <td>{{ item.title }}</td>
+      <td>{{item.name}}</td>
+      <td>{{ item.create_time }}</td>
+      <td>{{ item.comment }}</td>
+      {% if isOperation %}
+      <th width="8%">
+        <button class="btn btn-link radius" onclick="delComment({{item.id}});" type="button">删除</button>
+      </th>
+      {% endif%}
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+
+<div id ="page" style="height: 20px;width: 100%;text-align: center;"></div>
+<form action="/app/addComment" id="form" method="post" onsubmit="validateForm(); return false;" class="form form-horizontal responsive" id="demoform">
+        {% csrf_token %}
+        <div class="row cl">
+            <label class="form-label col-xs-2">相关：</label>
+            <div class="formControls col-xs-5"> <span class="select-box">
+                <select class="select" size="1" name="title" datatype="*" nullmsg="请选择所在城市！">
+                    <option value="IT">IT</option>
+                    <option value="read">读书</option>
+                    <option value="game">游戏</option>
+                    <option value="other">其他</option> 
+                </select>
+                </span> </div>
+            <div class="col-xs-5"> </div>
+        </div>
+        
+        <div class="row cl">
+            <label class="form-label col-xs-2">内容：</label>
+            <div class="formControls col-xs-5">
+                <textarea id="comment" name="comment" cols="" rows="" class="textarea"  placeholder="说点什么..." datatype="*10-500" nullmsg="备注不能为空！" onKeyUp="textarealength(this,500)"></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em>/500</p>
+            </div>
+            <div class="col-xs-5"> </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-10 col-xs-offset-2">
+                <input class="btn btn-primary" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <button onclick="occccc();">sssssssss</button>
+            </div>
+        </div>
+    </form>
+
+<div class="butdiv">
+    <span>注：该社区完全是袁庭飞那个笨蛋搞着玩的，会一点一点完善，希望关注！</span>
+</div>
+<script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/static/h-ui/lib/Validform/5.3.2/passwordStrength-min.js"></script>
+<script type="text/javascript">
+var isOperation = '{{isOperation}}';
+var count = {{count}};
+var curpage ={{curpage}};
+var title ='{{title}}';
+var user ='{{user}}';
+$("#selectTitle").val(title);
+$("#username").val(user);
+showPage(count,curpage);
+function showPage(count,curpage) {
+    var str = "";
+    var limit = 10;
+    if (count>limit) {
+       var temp = 1;
+       if (curpage>1) {
+           str +="<a onclick ='goPage("+(curpage-1)+")'>上一页</a>"
+       }
+       for (var i = 0; i < count;) {
+           if (temp==curpage) {
+               str +="&nbsp;&nbsp;当前是第"+temp+"页";
+           }else{
+               str +="&nbsp;&nbsp;<a onclick = 'goPage("+temp+")'>"+""+temp+"</a>";
+           }
+           i+=limit;
+           temp++;
+       }
+       var allpage = count%limit==0?count/limit:(count-count%limit)/limit+1;
+       if (curpage<allpage) {
+           str +="&nbsp;&nbsp;<a onclick ='goPage("+(curpage+1)+")'>下一页</a>"
+       }
+    }
+    str +="&nbsp;&nbsp;共有"+count+"条数据";
+    $('#page').html(str);
+}
+var timeNum = 5;//刷新时间  单位 秒  初始化值
+var refreshDataTime = timeNum; //刷新时间  单位 秒
+var refreshDataTimer; //定时器
+var openOption ='{{openOption}}';
+
+if (openOption=="True") {
+    refreshDataTimer=setInterval("getData()",1000);
+}
+
+
+//刷新下拉框值变化监听时间
+function refreshChangeTime(){
+   var num = jQuery("#refreshChangeTime").val();
+   timeNum = num;
+   refreshDataTime=timeNum;
+}
+//获取表格数据 每个时间间隔去刷新一次   该代码是定时器执行函数，每秒执行一次
+function getData(){
+    refreshDataTime--;
+    // jQuery("#text_comment_refresh").html("离下一次自动刷新还有"+refreshDataTime+"秒");
+    if (refreshDataTime==0) {
+        refreshDataTime=timeNum;
+        title  = $("#selectTitle").val();
+        username  = $("#username").val();
+        $.getJSON("/app/jsonHome",{"curpage":curpage,"title":title,"username":username}, function(json){
+            showData(json.row);
+            showPage(json.count[0].len,curpage);
+        });
+    }
+}
+
+
+//翻页
+ function goPage(page) {
+    title  = $("#selectTitle").val();
+    username  = $("#username").val();
+    curpage = page;
+    // window.location.href = "/app/?title="+title+"&user="+username;
+    $.getJSON("/app/jsonHome",{"curpage":page,"title":title,"username":username}, function(json){
+        showData(json.row);
+        showPage(json.count[0].len,curpage);
+    });
+ }
+ function validateForm() {
+    var comment = $("#comment").val();
+    if (comment=="") {
+        alert("请输入内容");
+        return false;
+    }else{
+       $("#form").submit();
+    }
+}
+//退出
+function loginout() {
+    window.location.href = "/app/exit";
+}
+//检索
+function selectChange() {
+    title  = $("#selectTitle").val();
+    username  = $("#username").val();
+    $.getJSON("/app/jsonHome",{"curpage":1,"title":title,"username":username}, function(json){
+        showData(json.row);
+        showPage(json.count[0].len,curpage);
+    });
+}
+
+//统计
+function statistics() {
+    window.location.href = "/app/statistics";
+}
+//删除
+function delComment(id) {
+    if (confirm("你确定要删除当前数据么")) {
+        window.location.href="/app/delComment/"+id;
+    }
+}
+//设置
+function option() {
+    window.location.href="/app/option";
+}
+//
+function showData(data){
+    var tbody = $("#tbody");
+    tbody.empty();
+    var strhtml = "";
+    for (var i = 0; i < data.length; i++) {
+        strhtml+="<tr>"+"<td>"+data[i].title+"</td>"+"<td>"+data[i].name+"</td>"+"<td>"+data[i].create_time+"</td>"+"<td>"+data[i].comment+"</td>";
+        if (isOperation=="True") {
+            strhtml+="<th width='8%'><button class='btn btn-link radius' onclick='delComment("+data[i].id+");' type='button'>删除</button>";
+        }
+        strhtml+="</tr>";
+    }
+    tbody.append(strhtml);
+}
+function game(type){
+  if (type==1) {
+    window.open("/game/snake");
+  }else if (type==2) {
+    window.open("/game/gobang");
+  }
+}
+function new_index() {
+  window.location.href="/app/new_index";
+}
+function jsontest() {
+    $.getJSON("/app/jsontest", function(json){
+      answer = json.answer;
+      alert(answer);
+    });
+}
+function occccc() {
+  $("#form").submit();
+}
+</script>
+</body>
+</html>

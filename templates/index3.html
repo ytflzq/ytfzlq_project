@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/static/js/react.js"></script>
+    <script src="/static/js/react-dom.js"></script>
+    <script src="/static/js/browser.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <style>
+body{ margin:0;font-family:微软雅黑;}
+.left{ width:200px; height:100%; border-right:1px solid #CCCCCC ;#FFFFFF; color:#000000; font-size:14px; text-align:center;}
+.div1{text-align:center; width:200px; padding-top:10px;}
+.div2{height:40px; line-height:40px;cursor: pointer; font-size:13px; position:relative;border-bottom:#ccc 1px dotted;}
+.jbsz {position: absolute; height: 20px; width: 20px; left: 40px; top: 10px; background:url(/static/img/1.png);}
+.xwzx {position: absolute; height: 20px; width: 20px; left: 40px; top: 10px; background:url(/static/img/2.png);}
+.zxcp {position: absolute; height: 20px; width: 20px; left: 40px; top: 10px; background:url(/static/img/4.png);}
+.lmtj {position: absolute; height: 20px; width: 20px; left: 40px; top: 10px; background:url(/static/img/8.png);}
+.div3{display: none;cursor:pointer; font-size:13px;}
+.div3 ul{margin:0;padding:0;}
+.div3 li{ height:30px; line-height:30px; list-style:none; border-bottom:#ccc 1px dotted; text-align:center;}
+</style>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/babel">
+var Nav = React.createClass({
+  render: function() {
+  
+  var commentNodes = this.props.data.map(function (comment) {
+      return (
+        <div>
+            333
+        </div>
+      );
+    });
+    return (
+      <div className="left">
+        <div class="div1">
+            {commentNodes}
+        </div>
+      </div>
+    );
+  }
+});
+
+var data = [
+  {title: "Pete rrr", children: ["This is one comment"]},
+  {title: "Jordan Walke", children: ["This is *another* comment"]}
+];
+ReactDOM.render(
+  <Nav data={data}/>,
+  document.getElementById('content')
+);
+    </script>
+  </body>
+</html>

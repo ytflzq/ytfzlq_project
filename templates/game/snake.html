@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html onkeydown="directionOnclick(event);">
+<head>
+    <title>canvas</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+    body{
+        margin:0;
+        padding: 0;
+        }
+    #mes{
+        color: red;
+        font-size: 13px;
+    }
+    </style>
+</head>
+<body>
+<div style="margin: 0 auto;width: 600px;height: 600px;">
+<canvas id="canvas" width="600" height="600"   ></canvas>
+</div>
+<div style="margin: 0 auto;width: 108px;">
+        <button onclick="reStart();">重新开始</button>
+</div>
+<div style="margin: 0 auto;width: 320px;">
+        <span id='mes'></span>
+</div>
+</body>
+<script type="text/javascript">
+var c=document.getElementById("canvas");
+var cxt=c.getContext("2d");
+var data = [];//每次点击的数据
+var clickCount = 0;//点击的次数
+var canvasWidth = 600;//画布大小
+var interval = 20;//间隔
+var dataArr = [{x:1,y:2},{x:1,y:3},{x:1,y:4}];
+var direction = "up";
+var target = {x:7,y:10};
+var socre = 0;
+var speed =1000;
+var dataArrDif =[];
+drw_table();
+var timer=setTimeout("timedCount()",speed);
+
+function drw_table() {
+    //上
+    cxt.beginPath();
+    cxt.lineWidth="1";
+    cxt.strokeStyle="red"; // 红色路径
+    cxt.moveTo(0,1);
+    cxt.lineTo(canvasWidth,1);
+    cxt.stroke(); // 进行绘制
+    //下
+    cxt.beginPath();
+    cxt.lineWidth="1";
+    cxt.strokeStyle="red"; // 红色路径
+    cxt.moveTo(0,canvasWidth-1);
+    cxt.lineTo(canvasWidth,canvasWidth-1);
+    cxt.stroke(); // 进行绘制
+        //左
+    cxt.beginPath();
+    cxt.lineWidth="1";
+    cxt.strokeStyle="red"; // 红色路径
+    cxt.moveTo(1,1);
+    cxt.lineTo(1,canvasWidth-1);
+    cxt.stroke(); // 进行绘制
+        //右
+    cxt.beginPath();
+    cxt.lineWidth="1";
+    cxt.strokeStyle="red"; // 红色路径
+    cxt.moveTo(canvasWidth-1,1);
+    cxt.lineTo(canvasWidth-1,canvasWidth-1);
+    cxt.stroke(); // 进行绘制
+    for (var i = 0; i < canvasWidth;) {
+        cxt.beginPath();
+        cxt.lineWidth="1";
+        cxt.strokeStyle="red"; // 红色路径
+        cxt.moveTo(i,0);
+        cxt.lineTo(i,canvasWidth);
+        cxt.stroke(); // 进行绘制
+        cxt.beginPath();
+        cxt.lineWidth="1";
+        cxt.moveTo(0,i);
+        cxt.lineTo(canvasWidth,i);
+        cxt.stroke(); // 进行绘制
+        i = i+interval;
+    }
+    drw_rect();
+}
+
+function drw_rect() {
+    cxt.fillStyle="red"; // 
+    cxt.fillRect(dataArr[0].x*20+2,dataArr[0].y*20+2,16,16);
+    cxt.fillStyle="black"; // 
+    for (var i = 1; i < dataArr.length; i++) {
+        cxt.fillRect(dataArr[i].x*20+2,dataArr[i].y*20+2,16,16);
+    }
+    cxt.fillStyle="red"; // 
+    for (var i = 0; i < dataArrDif.length; i++) {
+        cxt.fillRect(dataArrDif[i].x*20,dataArrDif[i].y*20,20,20);
+    }
+    cxt.fillStyle="blue"; // 
+    cxt.beginPath();
+    cxt.arc(target.x*20+10,target.y*20+10,interval/2,0,Math.PI*2,true);
+    cxt.closePath();
+    cxt.fill();
+}
+
+function timedCount()
+{
+    if (direction=="right") {
+        dataArr.unshift({x:dataArr[0].x+1,y:dataArr[0].y});
+    }else if (direction=="up") {
+        dataArr.unshift({x:dataArr[0].x,y:dataArr[0].y-1});
+    }else if (direction=="left") {
+        dataArr.unshift({x:dataArr[0].x-1,y:dataArr[0].y});
+    }else if (direction=="down") {
+        dataArr.unshift({x:dataArr[0].x,y:dataArr[0].y+1});
+    }
+    if (dataArr[0].x == target.x&&dataArr[0].y == target.y) {
+        createPoint();
+        socre++;
+        speed = setSpeed(socre);
+    }else{
+        dataArr.pop();
+    }
+    if (isSame()) {
+        alert("你已经输了,你的成绩是："+socre);
+    }else{
+        cxt.clearRect(0,0,canvasWidth,canvasWidth);
+        drw_table();
+        timer=setTimeout("timedCount()",speed);
+        document.getElementById("mes").innerHTML="你当前的成绩是："+socre+"  你当前的速度是"+speed+"毫秒移动一格";
+    } 
+}
+function isSame(){
+    if (dataArr[0].x>=30||dataArr[0].x<0) {
+        return true;
+    }
+    if (dataArr[0].y>=30||dataArr[0].y<0) {
+        return true;
+    }
+    for (var i = 1; i < dataArr.length; i++) {
+        if (dataArr[i].x==dataArr[0].x&&dataArr[i].y==dataArr[0].y) {
+            return true;
+        }
+    }
+    for (var i = 0; i < dataArrDif.length; i++) {
+        if (dataArrDif[i].x==dataArr[0].x&&dataArrDif[i].y==dataArr[0].y) {
+            return true;
+        }
+    }
+    return false;
+}
+function directionOnclick(e)
+{
+    var keynum;
+    var keychar;
+    keynum = window.event ? e.keyCode : e.which;
+    keychar = String.fromCharCode(keynum);
+    if (keynum=="37"&&direction!="right") {
+        direction = "left";
+    }else if (keynum=="38"&&direction!="down") {
+        direction = "up";
+    }else if (keynum=="39"&&direction!="left") {
+        direction = "right";
+    }else if (keynum=="40"&&direction!="up") {
+        direction = "down";
+    }
+    if (direction=="right") {
+        dataArr.unshift({x:dataArr[0].x+1,y:dataArr[0].y});
+    }else if (direction=="up") {
+        dataArr.unshift({x:dataArr[0].x,y:dataArr[0].y-1});
+    }else if (direction=="left") {
+        dataArr.unshift({x:dataArr[0].x-1,y:dataArr[0].y});
+    }else if (direction=="down") {
+        dataArr.unshift({x:dataArr[0].x,y:dataArr[0].y+1});
+    }
+    if (dataArr[0].x == target.x&&dataArr[0].y == target.y) {
+        createPoint();
+        socre++;
+        speed = setSpeed(socre);
+    }else{
+        dataArr.pop();
+    }
+    if (isSame()) {
+        alert("你已经输了,你的成绩是："+socre);
+    }else{
+        cxt.clearRect(0,0,canvasWidth,canvasWidth);
+        drw_table();
+    } 
+    document.getElementById("mes").innerHTML="你当前的成绩是："+socre+"  你当前的速度是"+speed+"毫秒移动一格";
+}
+function createPoint(){
+    do
+    {
+        target.x = Math.round(Math.random()*29.5);
+        target.y = Math.round(Math.random()*29.5);
+    }while (isHasTarget(target))
+    console.log(target);
+}
+function isHasTarget(target){
+    for (var i = 0; i < dataArr.length; i++) {
+        if (dataArr[i].x==target.x&&dataArr[i].y==target.y) {
+            return true;
+        }
+    }
+    for (var i = 0; i < dataArrDif.length; i++) {
+        if (dataArrDif[i].x==target.x&&dataArrDif[i].y==target.y) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+function reStart(){
+    dataArr = [{x:1,y:2},{x:1,y:3},{x:1,y:4}];
+    dataArrDif=[];
+    direction = "right";
+    target = {x:7,y:10};
+    socre = 0;
+    speed =1000;
+    cxt.clearRect(0,0,canvasWidth,canvasWidth);
+    drw_table();
+    timer=setTimeout("timedCount()",speed);
+    document.getElementById("mes").innerHTML="你当前的成绩是："+socre+"  你当前的速度是"+speed+"毫秒移动一格";
+}
+function setSpeed(socre){
+    if (socre>=0&&socre<5) {
+        addDif(1);
+        return 300;
+    }else if (socre>=5&&socre<11) {
+        addDif(2);
+        return 250;
+    }else if (socre>=11&&socre<18) {
+        addDif(3);
+        return 220;
+    }else if (socre>=18&&socre<30) {
+        addDif(4);
+        return 200;
+    }else if (socre>=30&&socre<45) {
+        return 170;
+    }else if (socre>=45&&socre<80) {
+        return 150;
+    }else if (socre>=80&&socre<120) {
+        return 100;
+    }else {
+        return 50;
+    }
+}
+function addDif(type){
+    if (type==1) {
+        for (var i = 0; i < 25; i++) {
+            dataArrDif.push({x:i,y:6});
+        }
+    }else if (type==2) {
+        for (var i = 5; i < 30; i++) {
+            dataArrDif.push({x:i,y:25});
+        }   
+    }else if (type==3) {
+        for (var i = 7; i < 24; i++) {
+            dataArrDif.push({x:6,y:i});
+        }   
+    }else if (type==4) {
+        for (var i = 7; i < 24; i++) {
+            dataArrDif.push({x:23,y:i});
+        }   
+    }
+        
+}
+</script>
+</html>

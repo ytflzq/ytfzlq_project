@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type' />
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/static/h-ui/css/H-ui.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/lib/Hui-iconfont/1.0.7/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/static/h-ui/css/style.css" />
+    <title>统计</title>
+    <style type="text/css">
+    body{
+        margin: 0;
+        padding: 0;
+    }
+    .topdiv{
+        background-color: #DEDEDE;
+        width: 100%;
+        height: 30px;
+    }
+    .butdiv{
+        position: fixed;
+        bottom: 0;
+        text-align: center;
+        color: red;
+        font-size: 12px;
+    }
+    </style>
+</head>
+<body>
+<div class="topdiv">
+    兄弟社区欢迎您，{{name}}
+    <button class="btn btn-link radius" onclick="loginout();" type="button">退出</button><button class="btn btn-link radius" onclick="window.location.href = '/app/';" type="button">返回</button>
+</div>
+ <div id = "map" style="width:100%;height:500px;">
+            你的浏览器不支持html5
+</div>
+
+<div class="butdiv">
+    <span>注：该社区完全是袁庭飞那个笨蛋搞着玩的，会一点一点完善，希望关注！</span>
+</div>
+<script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/static/js/echarts.min.js"></script>
+<script type="text/javascript">
+var count = [];
+var names = [];
+{% for item in count %}
+var a = {{item}};
+count.push(a);
+{% endfor %}
+{% for item in names %}
+var a = '{{item}}';
+names.push(a);
+{% endfor %}
+
+        $(function() {
+            init();
+        });
+        function init (year) {
+            var myChart = echarts.init(document.getElementById('map'));
+                var option = {
+                            title: {
+                                text: '发表评论数统计',
+                                subtext: '',
+                                textAlign:"center",
+                                left: '400',
+                            },
+                            color: ['#3398DB'],
+                            tooltip : {
+                                trigger: 'axis',
+                                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                                }
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            xAxis : [
+                                {
+                                    type : 'category',
+                                    data : names,
+                                    axisTick: {
+                                        alignWithLabel: true
+                                    }
+                                }
+                            ],
+                            yAxis : [
+                                {
+                                    type : 'value'
+                                }
+                            ],
+                            series : [
+                                {
+                                    name:'条数',
+                                    type:'bar',
+                                    barWidth: '60%',
+                                    data:count
+                                }
+                            ]
+                        };
+                myChart.setOption(option);
+        
+        }
+        
+function loginout() {
+    window.location.href = "/app/exit";
+}
+</script>
+</body>
+</html>
