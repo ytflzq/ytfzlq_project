@@ -1,0 +1,64 @@
+    body{
+        margin: 0;
+        padding: 0;
+    }
+    
+    a{
+        cursor: pointer;
+    }    
+    .topdiv{
+        background-color: #DEDEDE;
+        width: 100%;
+        height: 30px;
+        font-size: 15px;
+    }
+    .butdiv{
+        position: fixed;
+        bottom: 0;
+        text-align: center;
+        color: red;
+        font-size: 12px;
+    }
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    body{ font-size:12px;}
+    .title{
+        width: 50px;
+        margin: 0 auto;
+    }
+
+    .f-cb{ zoom:1;}
+    .f-cb:after,.f-cb:before{ clear:both; content:""; display:table; height:0; }
+
+
+    ul{ list-style:none;}
+
+    .m{ width:900px;height: 500px;scroll-top:20px; padding:20px; border:1px solid  #ccc; margin:0 auto; overflow: scroll;}
+    .box { position:relative; }
+    .box:after,.box:before { clear:both; content:""; display:table; height:0;}
+    .box dt a{ width:80px; height:60px; background:#CCC; display:inline-block; text-align:center; line-height:60px; }
+    .box dd{ max-width:274px; border:1px solid #ccc; border-radius:3px; padding:10px ;  background:#ccc; box-sizing:border-box; position:relative;}
+    .box dd:before{ position:absolute; bottom:5px;  content:""; border-width:10px; border-style:solid; }
+    .box.he dd:before,.box.vhe dd:before{ left:-20px; border-color:transparent #ccc  transparent transparent;   }
+    .box.me dd:before,.box.vme dd:before{ right:-20px; border-color:transparent  transparent transparent  #ccc; }
+    .box.he dt { float:left; }
+    .box.he dd{ margin-left:20px; margin-top:20px ;float:left; }
+    .box.me dt { float:right; margin-left:20px;}
+    .box.me dd { float:right; margin-top:20px;}
+
+    .box.he dt a{ float:left; }
+    .box.he dt span{ display:block; float:left;  margin-right:-200px; color:#666; margin-left:20px;}
+
+    .box.me dt a{ float:right; }
+    .box.me dt span{ display:block; float:right;  margin-left:-200px; color:#666; margin-right:20px;}
+
+
+    .box.vhe dt a{ position:absolute; bottom:0; }
+    .box.vhe dt span{ padding-left:80px; }
+    .box.vhe dd{ margin-left:100px; margin-top:5px;}
+     
+    .box.vme dt a{ position:absolute; bottom:0; right:0;}
+    .box.vme dt span{ padding-right:80px; text-align:right; display:block; }
+    .box.vme dd{ margin-right:80px; margin-top:5px; float:right;}
