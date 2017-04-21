@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^usermanage/', include('usermanage.urls')),
     url(r'^log/', include('log.urls')),
     url(r'^task/', include('task.urls')),
+    url(r'^snippets/', include('snippets.urls')),
 ]+ static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)

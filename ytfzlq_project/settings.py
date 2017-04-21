@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'login',
     'game',
     'usermanage',
+    'rest_framework',
+    'snippets.apps.SnippetsConfig',
 ]
 
 MIDDLEWARE = [
